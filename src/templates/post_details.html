@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% load crispy_forms_tags %}
+
+{% block head_title %}
+{{ instance.title }} | {{ block.super }}
+{% endblock head_title %}
+
+{% block post_details_link %}
+<!-- <li><a href="{{ instance.get_absolute_url }}" >{{ instance.title|upper }}</a></li> -->
+{% endblock %}
+
+{% block content %}
+<div class="container">
+	<div class="row">
+		<div class="col"></div>
+		<center><h1>{{ title|upper }}</h1><hr></center>
+		{% if request.user.is_staff or request.user.is_superuser %}
+		
+		<a href="{% url 'posts:post_delete' instance.slug %}"><button class="btn btn-danger pull-right">Delete Post
+		</button></a>
+		<a href="{% url 'posts:post_update' instance.slug %}"><button class="btn btn-primary pull-right ed" href=>Edit Post</button></a>
+		{% endif %}
+		
+	</div></div>
+</div>
+
+<br>
+
+<div class="container">
+	<div class="row"> 
+		<div class="col-md-10 col-md-offset-1">
+
+	{% if instance.image %}
+			<img src="{{ instance.image.url }}" class="img-responsive">
+	{% endif %}
+
+		<h1>{{ title|upper }} <small>{% if instance.draft %}<span style="color:red;">Draft</span>{% endif %} {{ instance.publish }}</small><!-- <small>{{ instance.timestamp }}</small> --></h1>
+<!-- <p>Read Time:{% if instance.read_time|time:'i' <= "01" %} < 1 Minute {% else %} {{ instance.read_time|time:'i' }} minutes{% endif %}</p> -->
+<!-- https://docs.djangoproject.com/en/2.1/ref/templates/builtins/#date -->
+
+		{% if instance.user.get_full_name %}
+			<p><b>By:</b>{{ instance.user.get_full_name|upper }}</p>
+		{% endif %}
+
+		<p>Read Time:{% if instance.read_time <= 1 %} < 1 Minute {% else %} {{ instance.read_time }} minutes{% endif %}</p>
+
+	
+ 
+<div class="fb-like" data-href="https://developers.facebook.com/docs/plugins/" data-layout="standard" data-action="like" data-size="small" data-show-faces="false" data-share="true"></div>
+<hr>
+
+<div class="row">
+	<div class="col-sm-12">
+		<div class="post_details_items">{{ instance.get_markdown }}</div><hr><br>	
+	<div>
+		<p class="lead">Comments</p>
+		{% if request.user.is_authenticated %}
+		<form method="POST" action=".">{% csrf_token %}
+			{{comment_form|crispy}}
+			<input type="submit" name="post comment" class="btn btn-info">
+		</form>
+		{% else %}
+		<p>You must Login to comment</p>
+		{% endif %}
+		<hr>
+<!-- <img src="{% static 'images/try3.jpg' %}"> -->
+
+	
+			{% for comment in comments %}
+				<blockquote>
+				<p>{{comment.content}}</p><br>
+				<footer>via {{comment.user}} | {{comment.timestamp|timesince}} ago | {% if comment.children.count > 0 %}{{comment.children.count}} Comment{% if comment.children.count > 1 %}s{% endif %} |{% endif %} <a class='comment-reply-btn' href='#'>Reply</a>|<a href='{{comment.get_absolute_url}}'>
+				Thread</a></footer>
+			 <div class="comment-reply" style="display:none">
+
+					{% for child_comment in comment.children %}
+					<blockquote>
+					<p>{{child_comment.content}}</p><br>
+					<footer>via {{child_comment.user}} | {{child_comment.timestamp|timesince}} ago</footer>
+					</blockquote>
+					{% endfor %}
+
+					{% if request.user.is_authenticated %}
+					<form method="POST" action=".">{% csrf_token %}
+						{{comment_form|crispy}}
+						<input type="hidden" name="parent_id" value="{{ comment.id }}">
+						<input type="submit" name="reply" class="btn btn-info">
+					</form>
+					{% else %}
+					<p>You must Login to comment</p>
+					{% endif %}
+
+				</div>	
+			</blockquote><hr>
+			{% endfor %}
+		</div>
+	</div>
+	</div>
+	</div>
+	</div>
+</div><br><br>
+<style>
+.ed{
+	margin-right:1%;
+}
+blockquote{
+	background:white;
+	color:black;
+	font-weight:bolder;
+}
+</style>
+
+{% endblock content %}

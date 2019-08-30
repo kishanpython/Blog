@@ -1,0 +1,209 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block style %}
+{% endblock %}
+
+
+{% block content %}
+
+<center><h1 style="color:#6C3483;font-family:tahoma;font-size:4vw;">HUSTLE BLOGS </h1>
+<b style="color:#fa4b2a;font-size:17px;"><u>KEEP HUSTLing</u></b>
+</center> <br>
+
+
+<div class="banner">
+<div class="container"> 
+    <h2 style="font-family: cursive;">Form is temporary, Class is Permanent!</h2>
+    <!-- <p style="color:#6a1b9a;font-size:1.6vw;font-family: cursive;">Welcome to Famous Blog Channel</p> -->
+  </div>
+</div>
+
+<div>
+  <div class="text-center" ><h1 class=""><u>ALL POSTS</u></h1></div><hr>
+</div>
+
+
+<div class="container-fluid">
+<div class="row">
+<div class="technology">
+  <div class="container">
+    <div class="col-md-8 technology-left">
+    <div class="tech-no">
+      <!-- technology-top -->   
+       <div class="tc-ch wow fadeInDown"  data-wow-duration=".8s" data-wow-delay=".2s">
+        
+        <!-- <center><b style="color:black;font-size:3vw;"><u>POSTS</u></b></center><br> -->
+
+             {% for obj in queryset %}
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="thumbnail">
+                    <div class="caption post_details_items">
+                
+                      {% if obj.image %}
+                        <img src="{{ obj.image.url }}"  class="img-responsive">
+                      {% endif %}
+
+                      {% if obj.draft  %}<h3 style="color:purple"><b>Staff Only:</b>Draft</h3>{% endif %} {% if obj.publish > today %}<h3 style="color:orange"><b>Post Type:</b> Future Post </h3>{% endif %}<br>
+
+
+
+
+                      <h3><a id= "kk" href="{{ obj.get_absolute_url }}">{{ obj.title|upper }}</a></h3>
+                        {% if obj.user.get_full_name %}
+
+                      <p>BY 
+                      <b style="color:#fa4b2a">{{ obj.user.get_full_name|upper }}</b>
+                    {{ obj.publish }}</p> <hr>
+                        {% endif %}
+                         <!-- <small>{{obj.timestamp|timesince }} ago</small></h3><hr> 
+
+                    content to display -->
+
+                     {{obj.get_markdown|truncatechars_html:30}}
+
+                      <p><a href="{{ obj.get_absolute_url }}" class="btn btn-primary" role="button" >Continue Reading</a> </p>
+              
+                    </div>
+                  </div>
+                </div><hr>
+                </div>
+              {% endfor %} 
+
+            <div class="clearfix"></div>
+      </div>
+      <div class="clearfix"></div>
+    </div>
+  </div>
+  
+ <!-- tehcnology top  -->
+ 
+  <div class="wthree">
+   <center> <h1>You may like</h1><hr></center>
+   {% if sorting_list %}
+   {% for obj in sorting_list %}
+         <div class="col-md-3 wthree-right wow fadeInDown"  data-wow-duration=".8s" data-wow-delay=".2s">  
+              <center> <div class="">
+                <h3><a id= "kk" href="{{ obj.get_absolute_url }}">{{ obj.title }}</a></h3>
+              </div><hr>
+              <div class="clearfix"></div></center>      
+      </div>{% endfor%}
+</div>{% else  %} <h4>No content for now</h4>{% endif %}</div>
+
+ 
+
+<center>
+  <div class="pagination">
+    <span class="step-links">
+        {% if queryset.has_previous %}
+            <a href="?{{ page_request_var }}={{ queryset.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}"style="font-size:20px;">previous</a>
+        {% endif %}
+
+        <span class="current">
+            Page {{ queryset.number }} of {{ queryset.paginator.num_pages }}.
+        </span>
+
+        {% if queryset.has_next %}
+            <a href="?{{ page_request_var }}={{ queryset.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}" style="font-size:20px;">next</a>
+        {% endif %}
+    </span>
+  </div>
+</center>
+
+
+
+<style type="text/css">
+
+.banner{
+background: url('{% static "images/main2.jpg" %}') no-repeat 0px 0px;
+background-size:cover;
+-webkit-background-size: cover;
+-o-background-size: cover;
+-ms-background-size: cover;
+-moz-background-size: cover;
+min-height: 600px;
+}
+
+
+</style>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+{% endblock content %}
+

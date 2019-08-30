@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% load crispy_forms_tags %}
+
+{% block head_extra %} 
+	{{form.media}}
+
+{% endblock head_extra %}
+
+
+{% block content %}
+
+<div><center><h1>Create New Post</h1><hr></center></div>
+
+<div class="col-sm-6">
+	<h1><u>Preview </u></h1>
+		<div class="content-preview">
+			<h1>Title</h1>
+			<h3 id="preview-title"></h3><br>
+			<h1>Post Content</h1>
+			<p id="preview-content">Post Content</p>		
+		</div>
+</div>
+
+
+<div class="col-sm-6" >
+	<h1><u>Form</u></h1>
+		<form method="post" action="" enctype="multipart/form-data">{% csrf_token %}
+		{{ form|crispy }} 
+		<input type="submit" name="Create Post">
+		</form>
+		<br><br><br>
+</div>
+
+	<style type="text/css">
+	.wmd-panel{
+		margin-right: 0px !important;
+		margin-left: 0px !important;
+	}
+	</style>
+
+{% endblock content %}
